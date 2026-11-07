@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-fredoka: 'Fredoka', cursive, sans-serif;
+    --font-outfit: 'Outfit', sans-serif;
+    --font-arcade: 'Press Start 2P', monospace;
+  }
+}
+
+.font-fredoka {
+  font-family: var(--font-fredoka);
+}
+
+.font-outfit {
+  font-family: var(--font-outfit);
+}
+
+.font-arcade {
+  font-family: var(--font-arcade);
+}
+
+/* Sugar Rush Candy Stripe Backgrounds */
+.candy-stripes-pink {
+  background: repeating-linear-gradient(
+    45deg,
+    #ff4b8b,
+    #ff4b8b 16px,
+    #ff6fa7 16px,
+    #ff6fa7 32px
+  );
+}
+
+.candy-stripes-mint {
+  background: repeating-linear-gradient(
+    -45deg,
+    #10b981,
+    #10b981 14px,
+    #34d399 14px,
+    #34d399 28px
+  );
+}
+
+@keyframes sweet-bounce-gentle {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.03) translateY(-4px);
+  }
+}
+
+.animate-sweet-bounce {
+  animation: sweet-bounce-gentle 2s ease-in-out infinite;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #190d2e;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff2a7a;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00e5c9;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Convite Real Sugar Rush - Aniversário da Maeve",
+  "description": "Convite de aniversário temático da Vanellope no Reino dos Doces para a Maeve com música tema Sugar Rush, festa com piscina e confirmação de presença e presentes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
