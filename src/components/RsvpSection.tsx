@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Users, Gift, MessageCircle, Heart, Loader2, Sparkles } from 'lucide-react';
+import { CheckCircle2, Users, Gift, MessageCircle, Heart, Loader2, Sparkles, Calendar, Download, ExternalLink } from 'lucide-react';
 import { PartyDetails, GuestRsvp } from '../types/invitation';
 import { fetchRsvpsFromSupabase, saveRsvpToSupabase } from '../lib/supabase';
+import { downloadCalendarEvent, getGoogleCalendarUrl } from '../lib/calendar';
 
 interface RsvpSectionProps {
   party: PartyDetails;
@@ -101,6 +102,9 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
 
     setIsSubmitting(false);
     setHasConfirmed(true);
+
+    // Auto-trigger registration on the guest's device calendar (.ics format for iOS/Android/Mac/PC)
+    downloadCalendarEvent(giftText);
 
     const cleanPhone = '5511983182725';
     const companionsText = countValue === 0 ? '0 (apenas eu)' : `${countValue} pessoa(s)`;
@@ -206,23 +210,24 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#25d366] to-[#128c7e] hover:brightness-110 active:scale-98 text-white font-fredoka font-bold text-sm uppercase tracking-wider shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#25d366] via-[#128c7e] to-[#00e5c9] hover:brightness-110 active:scale-98 text-white font-fredoka font-bold text-sm uppercase tracking-wider shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Registrando Confirmação...</span>
+                <span>Registrando Presença e Salvando na Agenda...</span>
               </>
             ) : (
               <>
                 <MessageCircle className="w-5 h-5 fill-current" />
-                <span>Confirmar Presença e Presente no WhatsApp</span>
+                <span>Confirmar Presença e Salvar na Agenda</span>
+                <Calendar className="w-4 h-4 ml-0.5 text-yellow-300" />
               </>
             )}
           </button>
         </form>
       ) : (
-        <div className="text-center py-5 space-y-3 animate-sweet-bounce">
+        <div className="text-center py-5 space-y-3.5 animate-sweet-bounce">
           <div className="w-12 h-12 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto text-emerald-300">
             <CheckCircle2 className="w-6 h-6" />
           </div>
@@ -234,6 +239,40 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
               Obrigado, <strong className="text-[#00e5c9]">{guestName}</strong>! Seu presente (<em>{giftWritten}</em>) foi registrado com sucesso!
             </p>
           </div>
+
+          {/* Device Calendar Registration Card */}
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-[#220d3a] border-2 border-[#00e5c9]/60 shadow-[0_0_20px_rgba(0,229,201,0.25)] text-left">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-1.5 text-[#00e5c9] font-fredoka font-bold text-xs uppercase tracking-wider">
+                <Calendar className="w-4 h-4" />
+                <span>Registrado na sua Agenda! 📅</span>
+              </div>
+              <span className="text-[10px] text-yellow-300 font-arcade">21/11/2026</span>
+            </div>
+            <p className="text-xs text-pink-100 font-fredoka leading-relaxed mb-3">
+              O evento com aviso de piscina e lembretes automáticos foi enviado para a agenda do seu aparelho. Caso precise reabrir ou salvar no Google Agenda:
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={() => downloadCalendarEvent(giftWritten)}
+                className="flex-1 py-2 px-3 rounded-xl bg-[#00e5c9] text-slate-950 font-fredoka font-bold text-xs flex items-center justify-center gap-1.5 hover:brightness-110 active:scale-95 transition-transform cursor-pointer shadow"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Salvar na Agenda (Celular/Apple)</span>
+              </button>
+              <a
+                href={getGoogleCalendarUrl(giftWritten)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2 px-3 rounded-xl bg-pink-500/20 border border-pink-400 text-pink-200 font-fredoka font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-pink-500/30 active:scale-95 transition-transform"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Abrir no Google Agenda</span>
+              </a>
+            </div>
+          </div>
+
           <button
             onClick={() => {
               setHasConfirmed(false);
@@ -241,7 +280,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
               setGiftWritten('');
               setAttendeesCount(0);
             }}
-            className="text-xs text-pink-300 underline hover:text-white font-fredoka cursor-pointer"
+            className="text-xs text-pink-300 underline hover:text-white font-fredoka cursor-pointer pt-1"
           >
             Confirmar outro convidado
           </button>

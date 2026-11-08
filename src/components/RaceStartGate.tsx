@@ -94,9 +94,9 @@ export const RaceStartGate: React.FC<RaceStartGateProps> = ({
           <div className="flex items-center gap-2.5 bg-[#1f093a]/90 border-2 border-pink-400/60 rounded-full py-1 px-3 shadow-[0_0_15px_rgba(255,42,122,0.4)] mt-0.5">
             <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-yellow-300 bg-pink-500 shadow-md flex-shrink-0">
               <img
-                src="/assets/aistudio/IMG-20261107-WA0056_b3170e5e.jpg"
+                src="/assets/aistudio/IMG-20261108-WA0000_19264d4a.jpg"
                 alt="Maeve"
-                className="w-full h-full object-cover object-[center_20%]"
+                className="w-full h-full object-cover object-[center_25%]"
               />
             </div>
             <div className="text-left pr-1">
@@ -196,9 +196,9 @@ export const RaceStartGate: React.FC<RaceStartGateProps> = ({
                 <div className="relative flex items-center">
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-yellow-300 shadow-[0_0_10px_#ff2a7a] -mr-3 z-20 flex-shrink-0 bg-pink-500">
                     <img
-                      src="/assets/aistudio/IMG-20261107-WA0056_b3170e5e.jpg"
+                      src="/assets/aistudio/IMG-20261108-WA0000_19264d4a.jpg"
                       alt="Maeve Pilota"
-                      className="w-full h-full object-cover object-[center_20%]"
+                      className="w-full h-full object-cover object-[center_25%]"
                     />
                   </div>
                   <div className="relative flex flex-col items-center">

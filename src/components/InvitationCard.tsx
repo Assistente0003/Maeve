@@ -10,6 +10,7 @@ import {
   SunMedium,
 } from 'lucide-react';
 import { PartyDetails } from '../types/invitation';
+import { downloadCalendarEvent } from '../lib/calendar';
 
 interface InvitationCardProps {
   party: PartyDetails;
@@ -57,9 +58,9 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
           <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-1.5 candy-stripes-pink shadow-[0_10px_30px_rgba(0,0,0,0.7)]">
             <div className="w-full h-full rounded-full overflow-hidden border-3 border-white bg-[#1a0730]">
               <img
-                src="/assets/aistudio/IMG-20261107-WA0056_b3170e5e.jpg"
+                src="/assets/aistudio/IMG-20261108-WA0000_19264d4a.jpg"
                 alt="Maeve - Aniversariante 2 Aninhos"
-                className="w-full h-full object-cover object-[center_20%] transform transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover object-[center_25%] transform transition-transform duration-500 group-hover:scale-105"
               />
             </div>
           </div>
@@ -113,17 +114,26 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
         {/* Three Compact Details Cards (Date, Time, Location) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {/* 1. Data da Festa: 21/11/2026 */}
-          <div className="p-3.5 rounded-2xl bg-[#200b34] border border-pink-500/40 text-center flex flex-col justify-center">
-            <div className="flex items-center justify-center gap-1.5 text-pink-400 mb-1">
-              <Calendar className="w-4 h-4" />
-              <span className="text-[10px] font-arcade uppercase">Data da Festa</span>
+          <div className="p-3.5 rounded-2xl bg-[#200b34] border border-pink-500/40 text-center flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-center gap-1.5 text-pink-400 mb-1">
+                <Calendar className="w-4 h-4" />
+                <span className="text-[10px] font-arcade uppercase">Data da Festa</span>
+              </div>
+              <strong className="text-white font-fredoka text-base sm:text-lg block">
+                21 / 11 / 2026
+              </strong>
+              <span className="text-xs text-pink-200/80 font-fredoka">
+                Sábado às 14:00
+              </span>
             </div>
-            <strong className="text-white font-fredoka text-base sm:text-lg block">
-              21 / 11 / 2026
-            </strong>
-            <span className="text-xs text-pink-200/80 font-fredoka">
-              Sábado
-            </span>
+            <button
+              type="button"
+              onClick={() => downloadCalendarEvent('')}
+              className="mt-2 py-1.5 px-2.5 rounded-xl bg-pink-500/20 border border-pink-400/40 text-pink-200 hover:text-white hover:bg-pink-500/30 font-fredoka text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-xs active:scale-95"
+            >
+              <span>📅 Salvar na Agenda</span>
+            </button>
           </div>
 
           {/* 2. Horário: 14:00 */}
