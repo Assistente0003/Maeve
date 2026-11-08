@@ -26,11 +26,11 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
       <div className="h-3 w-full candy-stripes-pink"></div>
 
       {/* Hero Banner with Clean Scrim */}
-      <div className="relative w-full h-44 sm:h-56 overflow-hidden">
+      <div className="relative w-full h-44 sm:h-56 overflow-hidden bg-[#240c3d]">
         <img
-          src="/src/assets/images/sugar_rush_hero_pool_1793918777080.jpg"
+          src="/assets/images/sugar_rush_hero_pool_1793918777080.jpg"
           alt="Sugar Rush Reino dos Doces com Piscina"
-          referrerPolicy="no-referrer"
+          loading="eager"
           className="w-full h-full object-cover object-center filter saturate-110"
         />
         {/* Measured dark scrim to ensure 100% legibility */}

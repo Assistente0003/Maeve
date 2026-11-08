@@ -62,11 +62,11 @@ export const RaceStartGate: React.FC<RaceStartGateProps> = ({
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-b from-[#190730] via-[#2a0e4a] to-[#120524] text-white px-3 sm:px-6 py-4 sm:py-6 select-none">
       {/* Background artwork */}
-      <div className="absolute inset-0 pointer-events-none opacity-35 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none opacity-35 overflow-hidden bg-[#180a2b]">
         <img
-          src="/src/assets/images/sugar_rush_hero_pool_1793918777080.jpg"
+          src="/assets/images/sugar_rush_hero_pool_1793918777080.jpg"
           alt="Reino dos Doces"
-          referrerPolicy="no-referrer"
+          loading="eager"
           className="w-full h-full object-cover filter blur-xs scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#120524] via-[#1a0730]/75 to-[#120524]/70"></div>

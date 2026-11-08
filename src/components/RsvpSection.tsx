@@ -8,18 +8,9 @@ interface RsvpSectionProps {
   onTriggerConfetti: () => void;
 }
 
-const GIFT_IDEAS = [
-  'Boneca ou Pelúcia Vanellope',
-  'Brinquedo Educativo / Encaixe (2 anos)',
-  'Roupinha ou Fantasia (Tamanho 2 a 3 anos)',
-  'Livro Infantil Cartonado / Musical',
-  'Massinha Atóxica ou Giz de Cera',
-  'Boia Infantil / Acessório de Piscina',
-];
-
 export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfetti }) => {
   const [guestName, setGuestName] = useState<string>('');
-  const [attendeesCount, setAttendeesCount] = useState<number>(1);
+  const [attendeesCount, setAttendeesCount] = useState<number | ''>(0);
   const [giftWritten, setGiftWritten] = useState<string>('');
   const [confirmedList, setConfirmedList] = useState<GuestRsvp[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -80,11 +71,12 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
     onTriggerConfetti();
 
     const giftText = giftWritten.trim();
+    const countValue = typeof attendeesCount === 'number' ? attendeesCount : 0;
 
     const newRsvp: GuestRsvp = {
       id: Date.now().toString(),
       guestName: guestName.trim(),
-      attendeesCount,
+      attendeesCount: countValue,
       giftToBring: giftText,
       confirmedAt: 'Hoje',
     };
@@ -92,7 +84,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
     try {
       await saveRsvpToSupabase({
         guest_name: guestName.trim(),
-        attendees_count: attendeesCount,
+        attendees_count: countValue,
         gift_to_bring: giftText,
       });
     } catch {
@@ -111,12 +103,13 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
     setHasConfirmed(true);
 
     const cleanPhone = '5511983182725';
+    const companionsText = countValue === 0 ? '0 (apenas eu)' : `${countValue} pessoa(s)`;
     const message = encodeURIComponent(
       `🏁 *CONFIRMAÇÃO DE PRESENÇA - ANIVERSÁRIO DA ${party.childName.toUpperCase()}!* 🍬🏊‍♀️\n\n` +
       `Olá! Aqui é *${guestName.trim()}*, confirmando nossa presença na festa!\n\n` +
       `📅 *Data:* 21/11/2026 às 14:00\n` +
       `📍 *Local:* Estrada Nossa Senhora da Fonte, 711c - Guaianazes\n` +
-      `👥 *Total de pessoas:* ${attendeesCount} pessoa(s)\n` +
+      `👥 *Pessoas que vão com você:* ${companionsText}\n` +
       `🎁 *Presente que vamos levar:* ${giftText}\n` +
       `🏊‍♀️ Já estamos com as roupas de banho preparadas para a piscina!\n\n` +
       `Até lá com muita alegria! ✨`
@@ -125,7 +118,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
     window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank', 'noopener,noreferrer');
   };
 
-  const totalAttendees = confirmedList.reduce((acc, curr) => acc + curr.attendeesCount, 0);
+  const totalAttendees = confirmedList.reduce((acc, curr) => acc + 1 + (Number(curr.attendeesCount) || 0), 0);
 
   return (
     <div className="w-full max-w-2xl mx-auto rounded-3xl bg-[#170929]/95 border-2 border-[#ff2a7a] p-5 sm:p-7 shadow-[0_0_30px_rgba(255,42,122,0.25)]">
@@ -160,23 +153,35 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
             />
           </div>
 
-          {/* Number of Attendees */}
+          {/* Number of Attendees - Starting at 0 */}
           <div>
-            <label className="block text-xs font-bold text-pink-300 mb-1 font-fredoka uppercase tracking-wider">
-              Quantas Pessoas vão com você?
+            <label className="block text-xs font-bold text-pink-300 mb-1 font-fredoka uppercase tracking-wider flex items-center justify-between">
+              <span>Quantas Pessoas vão com você?</span>
+              <span className="text-[10px] text-pink-300/70 font-normal">0 se for apenas você</span>
             </label>
             <div className="flex items-center gap-3 bg-[#230f3a] border border-pink-500/40 rounded-xl px-3.5 py-2">
               <Users className="w-4 h-4 text-[#00e5c9] shrink-0" />
               <input
                 type="number"
-                min="1"
-                max="10"
+                min="0"
+                max="20"
                 value={attendeesCount}
-                onChange={(e) => setAttendeesCount(Math.max(1, parseInt(e.target.value) || 1))}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') {
+                    setAttendeesCount('');
+                  } else {
+                    setAttendeesCount(Math.max(0, parseInt(val) || 0));
+                  }
+                }}
                 className="w-full bg-transparent text-white font-fredoka font-bold text-base focus:outline-hidden"
               />
               <span className="text-xs text-pink-300 font-fredoka shrink-0">
-                {attendeesCount === 1 ? 'pessoa' : 'pessoas'}
+                {attendeesCount === '' || attendeesCount === 0
+                  ? '0 pessoas'
+                  : attendeesCount === 1
+                  ? '1 pessoa'
+                  : `${attendeesCount} pessoas`}
               </span>
             </div>
           </div>
@@ -195,25 +200,6 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
               placeholder="Digite exatamente qual presente você vai levar para a Maeve..."
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#230f3a] border-2 border-pink-400/50 text-white placeholder-pink-300/40 focus:outline-hidden focus:border-[#00e5c9] focus:ring-2 focus:ring-[#00e5c9]/20 font-fredoka text-sm transition-all"
             />
-
-            {/* Quick click suggestions to assist guests */}
-            <div className="mt-2">
-              <span className="text-[11px] text-pink-200/70 font-fredoka block mb-1">
-                Sugestões rápidas (clique para preencher):
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {GIFT_IDEAS.map((idea) => (
-                  <button
-                    key={idea}
-                    type="button"
-                    onClick={() => setGiftWritten(idea)}
-                    className="px-2.5 py-1 rounded-lg bg-[#2e124d] hover:bg-[#ff2a7a]/30 border border-pink-400/30 text-pink-200 text-[11px] font-fredoka transition-all cursor-pointer"
-                  >
-                    + {idea}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Submit Button */}
@@ -253,6 +239,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
               setHasConfirmed(false);
               setGuestName('');
               setGiftWritten('');
+              setAttendeesCount(0);
             }}
             className="text-xs text-pink-300 underline hover:text-white font-fredoka cursor-pointer"
           >
@@ -303,7 +290,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ party, onTriggerConfet
                   </span>
                 </div>
                 <span className="text-[10px] font-bold text-[#00e5c9] bg-[#00e5c9]/10 px-2 py-0.5 rounded-lg border border-[#00e5c9]/30 shrink-0">
-                  +{guest.attendeesCount}
+                  {guest.attendeesCount > 0 ? `+${guest.attendeesCount}` : 'Individual'}
                 </span>
               </div>
             ))}
